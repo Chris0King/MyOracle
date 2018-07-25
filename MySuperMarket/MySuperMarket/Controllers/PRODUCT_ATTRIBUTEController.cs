@@ -128,5 +128,11 @@ namespace MySuperMarket.Controllers
             }
             base.Dispose(disposing);
         }
+
+        public JsonResult getJson()
+        {
+            var list = db.PRODUCT_ATTRIBUTE.Select(n => new { PRODUCT_ID = n.PRODUCT_ID, PRODUCT_NAME = n.PRODUCT_NAME, SUPPLIER_ID = n.SUPPLIER_ID, PURCHASE_PRICE = n.PURCHASE_PRICE, SELL_PRICE = n.SELL_PRICE, EXP = n.EXP, TOTAL = n.TOTAL });
+            return Json(new { code = 0, msg = "", count = 1000, data = list }, JsonRequestBehavior.AllowGet);
+        }
     }
 }

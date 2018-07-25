@@ -45,8 +45,8 @@ namespace MySuperMarket.Controllers
         }
 
         // POST: SUPPORTs/Create
-        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "SPONSOR_ID,INCOME_ID,SUPPORT_DATE,MONEY")] SUPPORT sUPPORT)
@@ -81,8 +81,8 @@ namespace MySuperMarket.Controllers
         }
 
         // POST: SUPPORTs/Edit/5
-        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "SPONSOR_ID,INCOME_ID,SUPPORT_DATE,MONEY")] SUPPORT sUPPORT)
@@ -131,6 +131,14 @@ namespace MySuperMarket.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+        public JsonResult getJson()
+        {
+            var list = db.SUPPORT.Include(n => n.INCOME).Include(n => n.SPONSOR).Select(n => new { SPONSOR_ID = n.SPONSOR_ID, SPONSOR_NAME = n.SPONSOR.SPONSOR_NAME, MONEY = n.MONEY, SUPPORT_DATE = n.SUPPORT_DATE });
+
+            //var pLAN = db.PLAN.Include(p => p.PRODUCT_ATTRIBUTE);
+            //var list = db.PLAN.Select(n => new { PLAN_ID = n.PLAN_ID, PRODUCT_ID = n.PRODUCT_ID, PHONE_NUMBER = n. });
+            return Json(new { code = 0, msg = "", count = 1000, data = list }, JsonRequestBehavior.AllowGet);
         }
     }
 }

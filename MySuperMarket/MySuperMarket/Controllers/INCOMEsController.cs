@@ -42,8 +42,8 @@ namespace MySuperMarket.Controllers
         }
 
         // POST: INCOMEs/Create
-        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "INCOME_ID,MONEY,INCOME_DATE,TYPE")] INCOME iNCOME)
@@ -74,8 +74,8 @@ namespace MySuperMarket.Controllers
         }
 
         // POST: INCOMEs/Edit/5
-        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "INCOME_ID,MONEY,INCOME_DATE,TYPE")] INCOME iNCOME)
@@ -122,6 +122,12 @@ namespace MySuperMarket.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public JsonResult getJson()
+        {
+            var list = db.INCOME.Select(n => new { INCOME_ID = n.INCOME_ID, INCOME_DATE = n.INCOME_DATE, MONEY = n.MONEY, TYPE = n.TYPE });
+            return Json(new { code = 0, msg = "", count = 1000, data = list }, JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -45,7 +45,7 @@ namespace MySuperMarket.Controllers
 
         // POST: PLANs/Create
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
+        // 详细信息，请参阅 https://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "PLAN_ID,PRODUCT_ID,PLAN_NUM")] PLAN pLAN)
@@ -79,7 +79,7 @@ namespace MySuperMarket.Controllers
 
         // POST: PLANs/Edit/5
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
+        // 详细信息，请参阅 https://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "PLAN_ID,PRODUCT_ID,PLAN_NUM")] PLAN pLAN)
@@ -128,5 +128,14 @@ namespace MySuperMarket.Controllers
             }
             base.Dispose(disposing);
         }
+        public JsonResult getJson()
+        {
+            var list = db.PLAN.Include(n => n.PRODUCT_ATTRIBUTE).Select(n => new { PLAN_ID = n.PLAN_ID, PRODUCT_ID = n.PRODUCT_ID, PRODUCT_NAME = n.PRODUCT_ATTRIBUTE.PRODUCT_NAME, SUPPLIER_ID = n.PRODUCT_ATTRIBUTE.SUPPLIER_ID, PURCHASE_PRICE = n.PRODUCT_ATTRIBUTE.PURCHASE_PRICE, PLAN_NUM = n.PLAN_NUM });
+
+            //var pLAN = db.PLAN.Include(p => p.PRODUCT_ATTRIBUTE);
+            //var list = db.PLAN.Select(n => new { PLAN_ID = n.PLAN_ID, PRODUCT_ID = n.PRODUCT_ID, PHONE_NUMBER = n. });
+            return Json(new { code = 0, msg = "", count = 1000, data = list }, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

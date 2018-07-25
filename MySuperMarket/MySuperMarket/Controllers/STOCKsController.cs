@@ -46,8 +46,8 @@ namespace MySuperMarket.Controllers
         }
 
         // POST: STOCKs/Create
-        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "STOCK_ID,BATCH_ID,PLAN_ID,EXPENSE_ID,STOCK_NUM,STOCK_DATE")] STOCK sTOCK)
@@ -84,8 +84,8 @@ namespace MySuperMarket.Controllers
         }
 
         // POST: STOCKs/Edit/5
-        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "STOCK_ID,BATCH_ID,PLAN_ID,EXPENSE_ID,STOCK_NUM,STOCK_DATE")] STOCK sTOCK)
@@ -135,6 +135,14 @@ namespace MySuperMarket.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+        public JsonResult getJson()
+        {
+            var list = db.STOCK.Include(n => n.EXPENSE).Include(n => n.PLAN).Include(n => n.PRODUCT).Select(n => new { STOCK_ID = n.STOCK_ID, BATCH_ID = n.PRODUCT.BATCH_ID, PRODUCT_ID = n.PRODUCT.PRODUCT_ID, PRODUCT_NAME = n.PRODUCT.PRODUCT_ATTRIBUTE.PRODUCT_NAME, PLAN_ID = n.PLAN_ID, STOCK_NUM = n.STOCK_NUM, STOCK_DATE = n.STOCK_DATE });
+
+            //var pLAN = db.PLAN.Include(p => p.PRODUCT_ATTRIBUTE);
+            //var list = db.PLAN.Select(n => new { PLAN_ID = n.PLAN_ID, PRODUCT_ID = n.PRODUCT_ID, PHONE_NUMBER = n. });
+            return Json(new { code = 0, msg = "", count = 1000, data = list }, JsonRequestBehavior.AllowGet);
         }
     }
 }

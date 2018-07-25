@@ -5,7 +5,9 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
+using System.Web.Services;
 using MySuperMarket.Models;
 
 namespace MySuperMarket.Controllers
@@ -14,114 +16,240 @@ namespace MySuperMarket.Controllers
     {
         private MyMarket db = new MyMarket();
 
-        // GET: EMPLOYEEs
+
         public ActionResult Index()
         {
-            return View(db.EMPLOYEE.ToList());
-        }
-
-        // GET: EMPLOYEEs/Details/5
-        public ActionResult Details(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            EMPLOYEE eMPLOYEE = db.EMPLOYEE.Find(id);
-            if (eMPLOYEE == null)
-            {
-                return HttpNotFound();
-            }
-            return View(eMPLOYEE);
-        }
-
-        // GET: EMPLOYEEs/Create
-        public ActionResult Create()
-        {
             return View();
+
         }
 
-        // POST: EMPLOYEEs/Create
-        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "EMPLOYEE_ID,EMPLOYEE_NAME,SALARY,SEX,PHONE_NUMBER")] EMPLOYEE eMPLOYEE)
+
+        public JsonResult getJson()
         {
+            var list = db.EMPLOYEE.Select(n => new { EMPLOYEE_ID = n.EMPLOYEE_ID, EMPLOYEE_NAME = n.EMPLOYEE_NAME, SEX = n.SEX, PHONE_NUMBER = n.PHONE_NUMBER, SALARY = n.SALARY });
+            return Json(new { code = 0, msg = "", count = 1000, data = list }, JsonRequestBehavior.AllowGet);
+
+        }
+        [HttpPost]
+        public JsonResult search01(string para01, string para02)
+        {
+
+            string search_type = "";
+            if (para01 != null)
+            {
+                search_type = para01;
+            }
+            else
+            {
+                var list = db.EMPLOYEE.Select(n => new { EMPLOYEE_ID = n.EMPLOYEE_ID, EMPLOYEE_NAME = n.EMPLOYEE_NAME, SEX = n.SEX, PHONE_NUMBER = n.PHONE_NUMBER, SALARY = n.SALARY });
+                return Json(new { code = 0, msg = "", count = 1000, data = list }, JsonRequestBehavior.AllowGet);
+            }
+            string value = "";
+            if (para02 != null)
+            {
+                value = para02;
+            }
+            else
+            {
+                var list = db.EMPLOYEE.Select(n => new { EMPLOYEE_ID = n.EMPLOYEE_ID, EMPLOYEE_NAME = n.EMPLOYEE_NAME, SEX = n.SEX, PHONE_NUMBER = n.PHONE_NUMBER, SALARY = n.SALARY });
+                return Json(new { code = 0, msg = "", count = 1000, data = list }, JsonRequestBehavior.AllowGet);
+            }
+
+            if (search_type.Equals("0"))
+            {
+                var list = db.EMPLOYEE.Where(n => n.EMPLOYEE_ID == value).Select(n => new { EMPLOYEE_ID = n.EMPLOYEE_ID, EMPLOYEE_NAME = n.EMPLOYEE_NAME, SEX = n.SEX, PHONE_NUMBER = n.PHONE_NUMBER, SALARY = n.SALARY });
+                return Json(new { code = 0, msg = "", count = 1000, data = list }, JsonRequestBehavior.AllowGet);
+
+            }
+
+            else if (search_type.Equals("1"))
+            {
+                var list = db.EMPLOYEE.Where(n => n.EMPLOYEE_NAME == value).Select(n => new { EMPLOYEE_ID = n.EMPLOYEE_ID, EMPLOYEE_NAME = n.EMPLOYEE_NAME, SEX = n.SEX, PHONE_NUMBER = n.PHONE_NUMBER, SALARY = n.SALARY });
+                return Json(new { code = 0, msg = "", count = 1000, data = list }, JsonRequestBehavior.AllowGet);
+
+            }
+
+            else if (search_type.Equals("2"))
+            {
+                var list = db.EMPLOYEE.Where(n => n.SEX == value).Select(n => new { EMPLOYEE_ID = n.EMPLOYEE_ID, EMPLOYEE_NAME = n.EMPLOYEE_NAME, SEX = n.SEX, PHONE_NUMBER = n.PHONE_NUMBER, SALARY = n.SALARY });
+                return Json(new { code = 0, msg = "", count = 1000, data = list }, JsonRequestBehavior.AllowGet);
+
+            }
+
+            else if (search_type.Equals("3"))
+            {
+                var list = db.EMPLOYEE.Where(n => n.PHONE_NUMBER == value).Select(n => new { EMPLOYEE_ID = n.EMPLOYEE_ID, EMPLOYEE_NAME = n.EMPLOYEE_NAME, SEX = n.SEX, PHONE_NUMBER = n.PHONE_NUMBER, SALARY = n.SALARY });
+                return Json(new { code = 0, msg = "", count = 1000, data = list }, JsonRequestBehavior.AllowGet);
+
+            }
+
+            else if (search_type.Equals("4"))
+            {
+                int intA;
+                int.TryParse(value, out intA);
+                var list = db.EMPLOYEE.Where(n => n.SALARY == intA).Select(n => new { EMPLOYEE_ID = n.EMPLOYEE_ID, EMPLOYEE_NAME = n.EMPLOYEE_NAME, SEX = n.SEX, PHONE_NUMBER = n.PHONE_NUMBER, SALARY = n.SALARY });
+                return Json(new { code = 0, msg = "", count = 1000, data = list }, JsonRequestBehavior.AllowGet);
+
+            }
+            var list2 = db.EMPLOYEE.Select(n => new { EMPLOYEE_ID = n.EMPLOYEE_ID, EMPLOYEE_NAME = n.EMPLOYEE_NAME, SEX = n.SEX, PHONE_NUMBER = n.PHONE_NUMBER, SALARY = n.SALARY });
+            return Json(new { code = 0, msg = "", count = 1000, data = list2 }, JsonRequestBehavior.AllowGet);
+
+        }
+
+
+        public JsonResult advancedSearch(string para01, string para02, string para03, string para04, string para05, string para06)
+        {
+            string id = para01;
+            string name = para02;
+            string salary_low = para03;
+            string salary_high = para04;
+            string sex = para05;
+            string phone = para06;
+
+            int low;
+            int.TryParse(salary_low, out low);
+            int high;
+            int.TryParse(salary_high, out high);
+
+            var list = from e in db.EMPLOYEE select e;
+            if (id != "!!")
+            {
+                list = list.Where(s => s.EMPLOYEE_ID == id);
+            }
+            if (name != "!!")
+            {
+                list = list.Where(s => s.EMPLOYEE_NAME == name);
+            }
+            if (sex != "!!")
+            {
+                list = list.Where(s => s.SEX == sex);
+            }
+            if (phone != "!!")
+            {
+                list = list.Where(s => s.PHONE_NUMBER == phone);
+            }
+            if (salary_low != "!!")
+            {
+                list = list.Where(s => s.SALARY > low);
+            }
+            if (salary_high != "!!")
+            {
+                list = list.Where(s => s.SALARY < high);
+            }
+
+            var list2 = list.Select(n => new { EMPLOYEE_ID = n.EMPLOYEE_ID, EMPLOYEE_NAME = n.EMPLOYEE_NAME, SEX = n.SEX, PHONE_NUMBER = n.PHONE_NUMBER, SALARY = n.SALARY });
+            return Json(new { code = 0, msg = "", count = 1000, data = list2 });
+        }
+
+
+        [HttpPost]
+        public JsonResult Create(string para01, string para02, string para03, string para04, string para05)
+        {
+            string id = para01;
+            string name = para02;
+            string salary = para03;
+            string sex = para04;
+            string phone = para05;
+
+            int intSalary;
+            int.TryParse(salary, out intSalary);
+            EMPLOYEE newEmployee = new EMPLOYEE();
+
+            newEmployee.EMPLOYEE_ID = id;
+            newEmployee.EMPLOYEE_NAME = name;
+            newEmployee.SALARY = intSalary;
+            newEmployee.SEX = sex;
+            newEmployee.PHONE_NUMBER = phone;
+
             if (ModelState.IsValid)
             {
-                db.EMPLOYEE.Add(eMPLOYEE);
+                db.EMPLOYEE.Add(newEmployee);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                var list = db.EMPLOYEE.Select(n => new { EMPLOYEE_ID = n.EMPLOYEE_ID, EMPLOYEE_NAME = n.EMPLOYEE_NAME, SEX = n.SEX, PHONE_NUMBER = n.PHONE_NUMBER, SALARY = n.SALARY });
+                return Json(new { code = 0, msg = "", count = 1000, data = list }, JsonRequestBehavior.AllowGet);
+
             }
 
-            return View(eMPLOYEE);
+            var list2 = db.EMPLOYEE.Select(n => new { EMPLOYEE_ID = n.EMPLOYEE_ID, EMPLOYEE_NAME = n.EMPLOYEE_NAME, SEX = n.SEX, PHONE_NUMBER = n.PHONE_NUMBER, SALARY = n.SALARY });
+            return Json(new { code = 0, msg = "", count = 1000, data = list2 }, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: EMPLOYEEs/Edit/5
-        public ActionResult Edit(string id)
+
+        [HttpPost]
+        public JsonResult Edit(string para01, string para02, string para03, string para04, string para05)
         {
+            string id = para01;
+            string name = para02;
+            string salary = para03;
+            string sex = para04;
+            string phone = para05;
+
+            int intSalary;
+            int.TryParse(salary, out intSalary);
+            /*
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Json(null);
             }
+            */
             EMPLOYEE eMPLOYEE = db.EMPLOYEE.Find(id);
             if (eMPLOYEE == null)
             {
-                return HttpNotFound();
+                //return Json(null);
             }
-            return View(eMPLOYEE);
-        }
-
-        // POST: EMPLOYEEs/Edit/5
-        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "EMPLOYEE_ID,EMPLOYEE_NAME,SALARY,SEX,PHONE_NUMBER")] EMPLOYEE eMPLOYEE)
-        {
             if (ModelState.IsValid)
             {
+                eMPLOYEE.EMPLOYEE_NAME = name;
+                eMPLOYEE.SALARY = intSalary;
+                eMPLOYEE.SEX = sex;
+                eMPLOYEE.PHONE_NUMBER = phone;
+
                 db.Entry(eMPLOYEE).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(eMPLOYEE);
-        }
 
-        // GET: EMPLOYEEs/Delete/5
-        public ActionResult Delete(string id)
+                try
+                {
+
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+
+
+                var list = db.EMPLOYEE.Select(n => new { EMPLOYEE_ID = n.EMPLOYEE_ID, EMPLOYEE_NAME = n.EMPLOYEE_NAME, SEX = n.SEX, PHONE_NUMBER = n.PHONE_NUMBER, SALARY = n.SALARY });
+                return Json(new { code = 0, msg = "", count = 1000, data = list }, JsonRequestBehavior.AllowGet);
+
+            }
+            var list2 = db.EMPLOYEE.Select(n => new { EMPLOYEE_ID = n.EMPLOYEE_ID, EMPLOYEE_NAME = n.EMPLOYEE_NAME, SEX = n.SEX, PHONE_NUMBER = n.PHONE_NUMBER, SALARY = n.SALARY });
+            return Json(new { code = 0, msg = "", count = 1000, data = list2 }, JsonRequestBehavior.AllowGet);
+
+        }
+        [HttpPost]
+        public void Delete(string id)
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return;
             }
             EMPLOYEE eMPLOYEE = db.EMPLOYEE.Find(id);
             if (eMPLOYEE == null)
             {
-                return HttpNotFound();
+                return;
             }
-            return View(eMPLOYEE);
-        }
 
-        // POST: EMPLOYEEs/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(string id)
-        {
-            EMPLOYEE eMPLOYEE = db.EMPLOYEE.Find(id);
             db.EMPLOYEE.Remove(eMPLOYEE);
             db.SaveChanges();
-            return RedirectToAction("Index");
+
         }
 
-        protected override void Dispose(bool disposing)
+        /*protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
                 db.Dispose();
             }
             base.Dispose(disposing);
-        }
+        }*/
     }
 }

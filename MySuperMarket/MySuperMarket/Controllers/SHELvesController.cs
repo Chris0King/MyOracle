@@ -42,8 +42,8 @@ namespace MySuperMarket.Controllers
         }
 
         // POST: SHELves/Create
-        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "SHELF_ID,SHELF_AREA")] SHELF sHELF)
@@ -74,8 +74,8 @@ namespace MySuperMarket.Controllers
         }
 
         // POST: SHELves/Edit/5
-        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "SHELF_ID,SHELF_AREA")] SHELF sHELF)
@@ -123,5 +123,13 @@ namespace MySuperMarket.Controllers
             }
             base.Dispose(disposing);
         }
+
+        public JsonResult getJson()
+        {
+            var list = db.SHELF.Select(n => new { SHELF_ID = n.SHELF_ID, SHELF_AREA = n.SHELF_AREA });
+            return Json(new { code = 0, msg = "", count = 1000, data = list }, JsonRequestBehavior.AllowGet);
+        }
+
+
     }
 }

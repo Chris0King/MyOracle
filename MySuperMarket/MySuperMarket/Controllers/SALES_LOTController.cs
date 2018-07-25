@@ -17,7 +17,7 @@ namespace MySuperMarket.Controllers
         // GET: SALES_LOT
         public ActionResult Index()
         {
-            var sALES_LOT = db.SALES_LOT.Include(s => s.INCOME).Include(s => s.PRODUCT);
+            var sALES_LOT = db.SALES_LOT.Include(s => s.INCOME);
             return View(sALES_LOT.ToList());
         }
 
@@ -40,13 +40,12 @@ namespace MySuperMarket.Controllers
         public ActionResult Create()
         {
             ViewBag.INCOME_ID = new SelectList(db.INCOME, "INCOME_ID", "TYPE");
-            ViewBag.BATCH_ID = new SelectList(db.PRODUCT, "BATCH_ID", "PRODUCT_ID");
             return View();
         }
 
         // POST: SALES_LOT/Create
-        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "BATCH_ID,LOT_DATE,INCOME_ID,MONEY,LOT_NUMBER")] SALES_LOT sALES_LOT)
@@ -59,7 +58,6 @@ namespace MySuperMarket.Controllers
             }
 
             ViewBag.INCOME_ID = new SelectList(db.INCOME, "INCOME_ID", "TYPE", sALES_LOT.INCOME_ID);
-            ViewBag.BATCH_ID = new SelectList(db.PRODUCT, "BATCH_ID", "PRODUCT_ID", sALES_LOT.BATCH_ID);
             return View(sALES_LOT);
         }
 
@@ -76,13 +74,12 @@ namespace MySuperMarket.Controllers
                 return HttpNotFound();
             }
             ViewBag.INCOME_ID = new SelectList(db.INCOME, "INCOME_ID", "TYPE", sALES_LOT.INCOME_ID);
-            ViewBag.BATCH_ID = new SelectList(db.PRODUCT, "BATCH_ID", "PRODUCT_ID", sALES_LOT.BATCH_ID);
             return View(sALES_LOT);
         }
 
         // POST: SALES_LOT/Edit/5
-        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "BATCH_ID,LOT_DATE,INCOME_ID,MONEY,LOT_NUMBER")] SALES_LOT sALES_LOT)
@@ -94,7 +91,6 @@ namespace MySuperMarket.Controllers
                 return RedirectToAction("Index");
             }
             ViewBag.INCOME_ID = new SelectList(db.INCOME, "INCOME_ID", "TYPE", sALES_LOT.INCOME_ID);
-            ViewBag.BATCH_ID = new SelectList(db.PRODUCT, "BATCH_ID", "PRODUCT_ID", sALES_LOT.BATCH_ID);
             return View(sALES_LOT);
         }
 
@@ -131,6 +127,19 @@ namespace MySuperMarket.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public JsonResult getJson()
+        {
+            var list = db.SALES_LOT.Include(s => s.PRODUCT).Select(n => new { BATCH_ID = n.BATCH_ID, PRODUCT_ID = n.PRODUCT.PRODUCT_ID, PRODUCT_NAME = n.PRODUCT.PRODUCT_ATTRIBUTE.PRODUCT_NAME, LOT_NUMBER = n.LOT_NUMBER, MONEY = n.MONEY, LOT_DATE = n.LOT_DATE });
+            return Json(new { code = 0, msg = "", count = 1000, data = list }, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult getJson1()
+        {
+
+            var list = db.SALES_LOT.Include(s => s.PRODUCT).Select(n => new { PRODUCT_ID = n.PRODUCT.PRODUCT_ID, PRODUCT_NAME = n.PRODUCT.PRODUCT_ATTRIBUTE.PRODUCT_NAME });
+            return Json(new { code = 0, msg = "", count = 1000, data = list }, JsonRequestBehavior.AllowGet);
         }
     }
 }

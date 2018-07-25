@@ -2,50 +2,630 @@
 
 @{
     ViewBag.Title = "Index";
+    Layout = null;
 }
 
-<h2>Index</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>超市管理系统 v0.1</title>
+    <link rel="stylesheet" href="/Content/assets/libs/layui/css/layui.css">
+</head>
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo" style="color:white">
+                <b>超市管理系统 v0.1</b>
+            </div>
+            <!-- 头部区域（可配合layui已有的水平导航） -->
+            <ul class="layui-nav layui-layout-left" style="margin-top: 20px">
+                <span class="layui-breadcrumb">
+                    <a href="">欢迎</a>
+                    <a href="">员工管理</a>
+                    <a href="">员工记录</a>
+                </span>
+            </ul>
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <img src="/Content/assets/image/avatar.PNG" class="layui-nav-img">
+                        管理员
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">基本资料</a></dd>
+                        <dd><a href="">安全设置</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="">退出登录</a></li>
+            </ul>
+        </div>
+        <!-- 导航栏区域 -->
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                    <li class="layui-nav-item">
+                        <a class="" href="javascript:;">销售管理</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="01_today_sale.html">今日销售</a></dd>
+                            <dd><a href="02_sale_record.html">销售报表</a></dd>
+                            <dd><a href="03_info_manage.html">商品信息管理</a></dd>
+                            <dd><a href="04_income_expenses_manage.html">收支管理</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">货架管理</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="05_shelves_partiton.html">货架分区</a></dd>
+                            <dd><a href="05.1_product_display.html">商品摆放</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a class="" href="javascript:;">库存管理</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="06_stock_record.html">进货记录</a></dd>
+                            <dd><a href="07_inventory_check.html">库存核查</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a class="" href="javascript:;">供应链管理</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="08_supply_record.html">进货计划</a></dd>
+                            <dd><a href="09_supplier_info.html">供货商信息</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a class="" href="javascript:;">赞助商管理</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="10_sponsor_record.html">赞助记录</a></dd>
+                            <dd><a href="11_sponsor_info.html">赞助商信息</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a class="" href="javascript:;">员工管理</a>
+                        <dl class="layui-nav-child">
+                            <dd class="layui-this"><a href="12_employee_record.html">员工记录</a></dd>
+                            <dd><a href="13_salary_manage.html">工资管理</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a class="" href="javascript:;">促销管理</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="14_vip_info.html">会员信息</a></dd>
+                            <dd><a href="15_discount_manage.html">折扣管理</a></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="layui-body" style="padding: 20px; background-color: #F2F2F2;">
+            <!-- 内容主体区域 -->
+            <div class="layui-card-md12 layui-col-space15">
+                <!-- 01小卡片 -->
+                <div class="layui-col-md3">
+                    <div class="layui-card">
+                        <div class="layui-card-header" style="padding: 8px 20px">
+                            <p style="font-size: 18px; font-weight: bold">当前超市员工共计</p>
+                        </div>
+                        <div class="layui-card-body" style="padding-left: 20px">
+                            <p>88&ensp;人</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- 02小卡片 -->
+                <div class="layui-col-md3">
+                    <div class="layui-card">
+                        <div class="layui-card-header" style="padding: 8px 20px">
+                            <p style="font-size: 18px; font-weight: bold">员工累计工资</p>
+                        </div>
+                        <div class="layui-card-body" style="padding-left: 20px">
+                            <p>23910821&ensp;元</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- 02小卡片 -->
+                <div class="layui-col-md3">
+                    <div class="layui-card">
+                        <div class="layui-card-header" style="padding: 8px 20px">
+                            <p style="font-size: 18px; font-weight: bold">员工累计工资</p>
+                        </div>
+                        <div class="layui-card-body" style="padding-left: 20px">
+                            <p>23910821&ensp;元</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- 02小卡片 -->
+                <div class="layui-col-md3">
+                    <div class="layui-card">
+                        <div class="layui-card-header" style="padding: 8px 20px">
+                            <p style="font-size: 18px; font-weight: bold">员工累计工资</p>
+                        </div>
+                        <div class="layui-card-body" style="padding-left: 20px">
+                            <p>23910821&ensp;元</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 大卡片 -->
+            <div class="layui-col-md12">
+                <div class="layui-card" style="margin-top: 12px">
+                    <div class="layui-card-header" style="padding: 8px 20px">
+                        <i class="layui-icon layui-icon-username" style="font-size: 18px; font-weight: bold">
+                            员工信息管理
+                        </i>
+                    </div>
+                    <div class="layui-card-body">
+                        <form class="layui-form layui-form-pane" action="" style="padding-top: 6px">
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">键值类型</label>
+                                    <div class="layui-input-inline">
+                                        <select name="type" lay-filter="aihao">
+                                            <option value="">-请选择-</option>
+                                            <option value="0">ID</option>
+                                            <option value="1">姓名</option>
+                                            <option value="2">性别</option>
+                                            <option value="3">手机号</option>
+                                            <option value="4">工资</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">输入键值</label>
+                                    <div class="layui-input-inline">
+                                        <input name="title" autocomplete="off" placeholder="请输入"
+                                               class="layui-input" type="text">
+                                    </div>
+                                </div>
+                                <button type="button" id="employee-search" class="layui-btn icon-btn">
+                                    <i class="layui-icon">&#xe615;</i>搜索
+                                </button>
+                                <button type="button" id="employee-Hsearch" class="layui-btn icon-btn">
+                                    <i class="layui-icon">&#xe615;</i>高级搜索
+                                </button>
+                                <button type="button" id="employee-add" class="layui-btn icon-btn">
+                                    <i class="layui-icon">&#xe654;</i>添加
+                                </button>
+                            </div>
+                        </form>
+                        <!-- 主体表格部分 -->
+                        <!-- 声明一个隐藏的表格，通过render函数进行数据载入 -->
+                        <table class="layui-hide" id="employee_info_table"
+                               lay-filter="employee_info_table"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-footer">
+            <!-- 底部固定区域 -->
+            小分队团队 - 底部固定区域
+        </div>
+    </div>
+    <script src="/Content/assets/libs/layui/layui.js"></script>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.EMPLOYEE_NAME)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.SALARY)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.SEX)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PHONE_NUMBER)
-        </th>
-        <th></th>
-    </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.EMPLOYEE_NAME)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.SALARY)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.SEX)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PHONE_NUMBER)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.EMPLOYEE_ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.EMPLOYEE_ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.EMPLOYEE_ID })
-        </td>
-    </tr>
-}
+    <!--高级搜索弹出框-->
+    <script type="text/html" id="employee-advanced-search">
+        <form id="employee-record-form" lay-filter="employee-record-form"
+              class="layui-form">
+            <div style="margin: 20px;">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">ID</label>
+                    <div class="layui-input-inline">
+                        <input name="employee_ID" placeholder="请输入ID" type="text"
+                               class="layui-input" />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-inline">
+                        <input name="employee_NAME" placeholder="请输入姓名" type="text"
+                               class="layui-input" />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">性别</label>
+                    <div class="layui-input-inline">
+                        <input name="sex_S" placeholder="请输入性别" type="text"
+                               class="layui-input" />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">手机号</label>
+                    <div class="layui-input-inline">
+                        <input name="phone_NUMBER" placeholder="请输入手机号" type="text"
+                               class="layui-input" />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">工资</label>
+                    <div class="layui-input-inline" style="width: 82px;">
+                        <input type="text" name="salary_MIN" placeholder="最小"
+                               autocomplete="off"
+                               class="layui-input">
+                    </div>
+                    <div class="layui-form-mid">-</div>
+                    <div class="layui-input-inline" style="width: 82px;">
+                        <input type="text" name="salary_MAX" placeholder="最大"
+                               autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn layui-btn-primary close"
+                                onclick="layer.closeAll()">
+                            取消
+                        </button>
+                        <button class="layui-btn layui-btn-normal"type="button"
+                                lay-filter="bt002" lay-submit>
+                            查询
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </script>
 
-</table>
+
+    <!--添加弹出框-->
+    <script type="text/html" id="employee-add-model">
+        <form id="employee-record-add-form" lay-filter="employee-record-add-form"
+              class="layui-form">
+            <div style="margin: 20px;">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">ID</label>
+                    <div class="layui-input-inline">
+                        <input name="employee_id" placeholder="请输入ID" type="text"
+                               class="layui-input"
+                               lay-verify="required" required />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-inline">
+                        <input name="employee_name" placeholder="请输入姓名" type="text"
+                               class="layui-input"
+                               lay-verify="required" required />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">性别</label>
+                    <div class="layui-input-inline">
+                        <input name="sex" placeholder="请输入性别" type="text" class="layui-input"
+                               lay-verify="required" required />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">手机号</label>
+                    <div class="layui-input-inline">
+                        <input name="phone_number" placeholder="请输入手机号" type="text"
+                               class="layui-input"
+                               lay-verify="required" required />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">工资</label>
+                    <div class="layui-input-inline">
+                        <input name="salary" placeholder="请输入工资" type="text" class="layui-input"
+                               lay-verify="required" required />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn layui-btn-primary close" onclick="layer.closeAll()">
+                            取消
+                        </button>
+                        <button class="layui-btn layui-btn-normal"
+                                lay-filter="bt001" lay-submit>
+                            添加
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </script>
+
+
+    <!--修改弹出框-->
+    <script type="text/html" id="employee-record-model2">
+        <form id="employee-record-update-form2" lay-filter="employee-record-update-form2"
+              class="layui-form model-form">
+            <div style="margin: 20px;">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">ID</label>
+                    <div class="layui-input-inline">
+                        <input name="EMPLOYEE_ID" placeholder="请输入ID" type="text" class="layui-input"
+                               lay-verify="required" required />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-inline">
+                        <input name="EMPLOYEE_NAME" placeholder="请输入姓名" type="text" class="layui-input"
+                               lay-verify="required" required />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">性别</label>
+                    <div class="layui-input-inline">
+                        <input name="SEX" placeholder="请输入性别" type="text" class="layui-input"
+                               lay-verify="required" required />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">手机号</label>
+                    <div class="layui-input-inline">
+                        <input name="PHONE_NUMBER" placeholder="请输入手机号" type="text" class="layui-input"
+                               lay-verify="required" required />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">工资</label>
+                    <div class="layui-input-inline">
+                        <input name="SALARY" placeholder="请输入工资" type="text" class="layui-input"
+                               lay-verify="required" required />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn layui-btn-primary close" type="button"
+                                onclick="layer.closeAll()">
+                            取消
+                        </button>
+                        <button class="layui-btn layui-btn-normal" type="button"
+                                lay-filter="employee-change-form-submit" lay-submit>
+                            保存
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </script>
+
+
+    <script>
+    layui.use(['element', 'layer'], function () {
+        var element = layui.element, layer = layui.layer;
+    });
+    </script>
+
+    <!-- 表格操作列-->
+    <script type="text/html" id="staff-table-bar">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+    <script>
+    layui.use(['form', 'table'], function () {
+        var table = layui.table;
+        var $ = layui.jquery;
+        var form = layui.form;
+        table.render({
+            elem: '#employee_info_table'
+            , url: '/EMPLOYEEs/getJson/' //数据接口
+            , method: "post"
+            , cellMinWidth: 160
+            , cols: [[
+                {field: 'EMPLOYEE_ID', title: '员工编号', sort: true}
+                , {field: 'EMPLOYEE_NAME', title: '员工姓名', sort: true}
+                , {field: 'SALARY', title: '工资', sort: true}
+                , {field: 'SEX', title: '性别', sort: true}
+                , {field: 'PHONE_NUMBER', title: '电话号', sort: true}
+                , {align: 'center', toolbar: '#staff-table-bar', title: '操作'}
+            ]]
+            , data: [{
+                "EMPLOYEE_ID": "12",
+                "EMPLOYEE_NAME": "123",
+                "SALARY": "2000",
+                "SEX": "man",
+                "PHONE_NUMBER": "86"
+            }]
+        });
+        // 高级搜索按钮点击事件
+        $(document).on('click', '#employee-Hsearch', function () {
+            layer.open({
+                type: 1,
+                title: '高级搜索',
+                area: '400px',
+                offset: 'auto',
+                content: $('#employee-advanced-search').html()
+            });
+        });
+        //添加按钮点击事件
+        $(document).on('click', '#employee-add', function () {
+            layer.open({
+                type: 1,
+                title: '添加员工',
+                area: '400px',
+                offset: 'auto',
+                content: $('#employee-add-model').html(),
+            });
+        });
+        // 工具条点击事件
+        table.on('tool(employee_info_table)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') { //修改
+                layer.open({
+                    type: 1,
+                    title: '员工信息修改',
+                    area: '400px',
+                    offset: 'auto',
+                    content: $('#employee-record-model2').html(),
+                    success: function () {
+                        form.val('employee-record-update-form2', data);
+                    }
+                });
+            } else if (obj.event === 'del') { //删除
+                layer.confirm('确定要删除吗？', {title: '提示'}, function (index) {
+                    $.post('/EMPLOYEEs/Delete/' + data.EMPLOYEE_ID);
+                    obj.del();
+                    layer.close(index);
+                });
+            }
+        });
+    });
+    </script>
+    <!-- 搜索点击事件 -->
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $("#employee-search").click(function () {
+            layui.use(['table', 'element'], function () {
+                var table = layui.table;
+                var element = layui.element;
+                var $ = layui.jquery;
+                table.render({
+                    elem: '#employee_info_table'
+                    , url: '/EMPLOYEEs/search01/' + $("#type").val() + '/' + $("input[name='title']").val() //数据接口
+                    , method: "post"
+                    , cellMinWidth: 150
+                    , cols: [[
+                        {field: 'EMPLOYEE_ID', title: '员工编号', sort: true}
+                        , {field: 'EMPLOYEE_NAME', title: '员工姓名', sort: true}
+                        , {field: 'SALARY', title: '工资', sort: true}
+                        , {field: 'SEX', title: '性别', sort: true}
+                        , {field: 'PHONE_NUMBER', title: '电话号', sort: true}
+                        , {align: 'center', toolbar: '#staff-table-bar', title: '操作'}
+                    ]]
+                    , data: [{
+                        "EMPLOYEE_ID": "12",
+                        "EMPLOYEE_NAME": "123",
+                        "SALARY": "2000",
+                        "SEX": "man",
+                        "PHONE_NUMBER": "86"
+                    }]
+                });
+            });
+        });
+    });
+    </script>
+    <!-- 按钮监听事件 -->
+    <script>
+    layui.use(['form', 'layer'], function () {
+        var form = layui.form
+            , layer = layui.layer;
+
+        /*//自定义验证规则
+        form.verify({
+            title: function(value){
+                if(value.length < 5){
+                    return '标题至少得5个字符啊';
+                }
+            }
+        });*/
+
+        //监听提交，对多个弹出窗口起作用
+        //增添
+        form.on('submit(bt001)', function (data) {
+            var elem1 = data.field.employee_id;
+            var elem2 = data.field.employee_name;
+            var elem3 = data.field.salary;
+            var elem4 = data.field.sex;
+            var elem5 = data.field.phone_number;
+
+            layui.use(['table', 'element'], function () {
+                var table = layui.table;
+                var element = layui.element;
+                var $ = layui.jquery;
+                //alert($("#type").val() + '/' + $("input[name='title']").val());
+                table.render({
+                    elem: '#employee_info_table'
+                    , url: '/EMPLOYEEs/Create/' + elem1 + '/' + elem2 + '/' + elem3 + '/' + elem4 + '/' + elem5 //数据接口
+                    , method: "post"
+                    , cellMinWidth: 150
+                    , cols: [[
+                        {field: 'EMPLOYEE_ID', title: '员工编号', sort: true}
+                        , {field: 'EMPLOYEE_NAME', title: '员工姓名', sort: true}
+                        , {field: 'SALARY', title: '工资', sort: true}
+                        , {field: 'SEX', title: '性别', sort: true}
+                        , {field: 'PHONE_NUMBER', title: '电话号', sort: true}
+                        , {align: 'center', toolbar: '#staff-table-bar', title: '操作'}
+                    ]]
+                });
+            });
+
+            //return false;
+        });
+
+        //修改响应事件
+        form.on('submit(employee-change-form-submit)', function (data) {
+            var elem1 = data.field.EMPLOYEE_ID;
+            var elem2 = data.field.EMPLOYEE_NAME;
+            var elem3 = data.field.SALARY;
+            var elem4 = data.field.SEX;
+            var elem5 = data.field.PHONE_NUMBER;
+
+            layui.use(['table', 'element'], function () {
+                var table = layui.table;
+                var element = layui.element;
+                var $ = layui.jquery;
+                //alert(elem1);
+                table.render({
+                    elem: '#employee_info_table'
+                    , url: '/EMPLOYEEs/Edit/' + elem1 + '/' + elem2 + '/' + elem3 + '/' + elem4 + '/' + elem5  //数据接口
+                    , method: "post"
+                    , cellMinWidth: 150
+                    , cols: [[
+                        {field: 'EMPLOYEE_ID', title: '员工编号', sort: true}
+                        , {field: 'EMPLOYEE_NAME', title: '员工姓名', sort: true}
+                        , {field: 'SALARY', title: '工资', sort: true}
+                        , {field: 'SEX', title: '性别', sort: true}
+                        , {field: 'PHONE_NUMBER', title: '电话号', sort: true}
+                        , {align: 'center', toolbar: '#staff-table-bar', title: '操作'}
+                    ]]
+                });
+            });
+            layer.closeAll();
+            // return false
+        });
+
+        //高级搜索
+        form.on('submit(bt002)', function (data) {
+            var elem1 = data.field.employee_ID;
+            var elem2 = data.field.employee_NAME;
+            var elem3 = data.field.salary_MIN;
+            var elem4 = data.field.salary_MAX;
+            var elem5 = data.field.sex_S;
+            var elem6 = data.field.phone_NUMBER;
+
+            if (elem1 == "") elem1 = "!!";
+            if (elem2 == "") elem2 = "!!";
+            if (elem3 == "") elem3 = "!!";
+            if (elem4 == "") elem4 = "!!";
+            if (elem5 == "") elem5 = "!!";
+            if (elem6 == "") elem6 = "!!";
+
+            layui.use(['table', 'element'], function () {
+                var table = layui.table;
+                var element = layui.element;
+                var $ = layui.jquery;
+                //alert(data.field.sex_S);
+                //alert(elem5);
+                //alert(elem1);
+                table.render({
+                    elem: '#employee_info_table'
+                    ,
+                    url: '/EMPLOYEEs/advancedSearch/' + elem1 + '/' + elem2 + '/' + elem3 + '/' + elem4 + '/' + elem5 + '/' + elem6  //数据接口
+                    ,
+                    method: "post"
+                    ,
+                    cellMinWidth: 150
+                    ,
+                    cols: [[
+                        {field: 'EMPLOYEE_ID', title: '员工编号', sort: true}
+                        , {field: 'EMPLOYEE_NAME', title: '员工姓名', sort: true}
+                        , {field: 'SALARY', title: '工资', sort: true}
+                        , {field: 'SEX', title: '性别', sort: true}
+                        , {field: 'PHONE_NUMBER', title: '电话号', sort: true}
+                        , {align: 'center', toolbar: '#staff-table-bar', title: '操作'}
+                    ]]
+                });
+            });
+        });
+
+    });
+    </script>
+
+</body>
+</html>

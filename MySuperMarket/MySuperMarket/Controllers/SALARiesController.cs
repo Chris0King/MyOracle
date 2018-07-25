@@ -45,8 +45,8 @@ namespace MySuperMarket.Controllers
         }
 
         // POST: SALARies/Create
-        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "EXPENSE_ID,EMPLOYEE_ID,SALARY_DATE")] SALARY sALARY)
@@ -81,8 +81,8 @@ namespace MySuperMarket.Controllers
         }
 
         // POST: SALARies/Edit/5
-        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "EXPENSE_ID,EMPLOYEE_ID,SALARY_DATE")] SALARY sALARY)
@@ -131,6 +131,12 @@ namespace MySuperMarket.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public JsonResult getJson()
+        {
+            var list = db.SALARY.Include(s => s.EMPLOYEE).Include(s => s.EXPENSE).Select(n => new { EMPLOYEE_ID = n.EMPLOYEE_ID, EMPLOYEE_NAME = n.EMPLOYEE.EMPLOYEE_NAME, SALARY_DATE = n.SALARY_DATE, SALARY = n.EMPLOYEE.SALARY });
+            return Json(new { code = 0, msg = "", count = 1000, data = list }, JsonRequestBehavior.AllowGet);
         }
     }
 }
