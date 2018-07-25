@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -18,121 +18,197 @@ namespace MySuperMarket.Controllers
         public ActionResult Index()
         {
             var vIP = db.VIP.Include(v => v.EMPLOYEE);
-            return View(vIP.ToList());
-        }
-
-        // GET: VIPs/Details/5
-        public ActionResult Details(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            VIP vIP = db.VIP.Find(id);
-            if (vIP == null)
-            {
-                return HttpNotFound();
-            }
-            return View(vIP);
-        }
-
-        // GET: VIPs/Create
-        public ActionResult Create()
-        {
-            ViewBag.EMPLOYEE_ID = new SelectList(db.EMPLOYEE, "EMPLOYEE_ID", "EMPLOYEE_NAME");
             return View();
         }
 
-        // POST: VIPs/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "VIP_ID,EMPLOYEE_ID,CREDITS,VIP_NAME,SEX,PHONE_NUMBER")] VIP vIP)
-        {
-            if (ModelState.IsValid)
-            {
-                db.VIP.Add(vIP);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            ViewBag.EMPLOYEE_ID = new SelectList(db.EMPLOYEE, "EMPLOYEE_ID", "EMPLOYEE_NAME", vIP.EMPLOYEE_ID);
-            return View(vIP);
-        }
-
-        // GET: VIPs/Edit/5
-        public ActionResult Edit(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            VIP vIP = db.VIP.Find(id);
-            if (vIP == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.EMPLOYEE_ID = new SelectList(db.EMPLOYEE, "EMPLOYEE_ID", "EMPLOYEE_NAME", vIP.EMPLOYEE_ID);
-            return View(vIP);
-        }
-
-        // POST: VIPs/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "VIP_ID,EMPLOYEE_ID,CREDITS,VIP_NAME,SEX,PHONE_NUMBER")] VIP vIP)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(vIP).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            ViewBag.EMPLOYEE_ID = new SelectList(db.EMPLOYEE, "EMPLOYEE_ID", "EMPLOYEE_NAME", vIP.EMPLOYEE_ID);
-            return View(vIP);
-        }
-
-        // GET: VIPs/Delete/5
-        public ActionResult Delete(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            VIP vIP = db.VIP.Find(id);
-            if (vIP == null)
-            {
-                return HttpNotFound();
-            }
-            return View(vIP);
-        }
-
-        // POST: VIPs/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(string id)
-        {
-            VIP vIP = db.VIP.Find(id);
-            db.VIP.Remove(vIP);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
 
         public JsonResult getJson()
         {
             var list = db.VIP.Select(n => new { VIP_ID = n.VIP_ID, VIP_NAME = n.VIP_NAME, SEX = n.SEX, PHONE_NUMBER = n.PHONE_NUMBER, CREDITS = n.CREDITS, EMPLOYEE_ID = n.EMPLOYEE_ID });
+            return Json(new { code = 0, msg = "", count = 1000, data = list });
+        }
+        [HttpPost]
+        public JsonResult search01(string para01, string para02)
+        {
+            string type = para01;
+            string searchString = para02;
+            if (type.Equals("1"))
+            {
+                return Json(new { code = 0, msg = "", count = 1000, data = db.VIP.Where(s => s.VIP_ID == searchString).ToList() }); ;
+            }
+            else if (type.Equals("2"))
+            {
+                return Json(new { code = 0, msg = "", count = 1000, data = db.VIP.Where(s => s.VIP_NAME == searchString).ToList() }); ;
+            }
+            else if (type.Equals("3"))
+            {
+                return Json(new { code = 0, msg = "", count = 1000, data = db.VIP.Where(s => s.SEX == searchString).ToList() }); ;
+            }
+            else if (type.Equals("4"))
+            {
+                return Json(new { code = 0, msg = "", count = 1000, data = db.VIP.Where(s => s.PHONE_NUMBER == searchString).ToList() }); ;
+            }
+            else if (type.Equals("5"))
+            {
+                return Json(new { code = 0, msg = "", count = 1000, data = db.VIP.Where(s => s.CREDITS == long.Parse(searchString)).ToList() }); ;
+            }
+            else if (type.Equals("6"))
+            {
+                return Json(new { code = 0, msg = "", count = 1000, data = db.VIP.Where(s => s.EMPLOYEE_ID == searchString).ToList() }); ;
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+        public JsonResult advancedSearch(string para01, string para02, string para03, string para04, string para05, string para06, string para07)
+        {
+            string v_id = para01;
+            string name = para02;
+            string sex = para03;
+            string phone = para04;
+            string credits_min = para05;
+            string credits_max = para06;
+            string e_id = para07;
+
+            int min;
+            int.TryParse(credits_min, out min);
+            int max;
+            int.TryParse(credits_max, out max);
+
+            var list = from e in db.VIP select e;
+            if (v_id != "!!")
+            {
+                list = list.Where(s => s.VIP_ID == v_id);
+            }
+            if (name != "!!")
+            {
+                list = list.Where(s => s.VIP_NAME == name);
+            }
+            if (sex != "!!")
+            {
+                list = list.Where(s => s.SEX == sex);
+            }
+            if (phone != "!!")
+            {
+                list = list.Where(s => s.PHONE_NUMBER == phone);
+            }
+            if (credits_min != "!!")
+            {
+                list = list.Where(s => s.CREDITS > min);
+            }
+            if (credits_max != "!!")
+            {
+                list = list.Where(s => s.CREDITS < max);
+            }
+
+            var list2 = list.Select(n => new { VIP_ID = n.VIP_ID, VIP_NAME = n.VIP_NAME, SEX = n.SEX, PHONE_NUMBER = n.PHONE_NUMBER, CREDITS = n.CREDITS, EMPLOYEE_ID = n.EMPLOYEE_ID }).ToList();
+
+            return Json(new { code = 0, msg = "", count = 1000, data = list2 });
+        }
+
+        [HttpPost]
+        public JsonResult Edit(string para01, string para02, string para03, string para04, string para05, string para06)
+        {
+            string v_id = para01;
+            string name = para02;
+            string sex = para03;
+            string phone = para04;
+            string credits = para05;
+            string e_id = para06;
+
+            int intCredits;
+            int.TryParse(credits, out intCredits);
+            /*
+            if (id == null)
+            {
+                return Json(null);
+            }
+            */
+            VIP vIP = db.VIP.Find(v_id);
+            /*
+            if (eMPLOYEE == null)
+            {
+                //return Json(null);
+            }
+            */
+            vIP.VIP_NAME = name;
+            vIP.SEX = sex;
+            vIP.PHONE_NUMBER = phone;
+            vIP.CREDITS = intCredits;
+            vIP.EMPLOYEE_ID = e_id;
+
+            db.Entry(vIP).State = EntityState.Modified;
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            var list = db.VIP.Select(n => new { VIP_ID = n.VIP_ID, VIP_NAME = n.VIP_NAME, SEX = n.SEX, PHONE_NUMBER = n.PHONE_NUMBER, CREDITS = n.CREDITS, EMPLOYEE_ID = n.EMPLOYEE_ID });
+            return Json(new { code = 0, msg = "", count = 1000, data = list });
+        }
+
+        [HttpPost]
+        public bool test(string id)
+        {
+            VIP vIP = db.VIP.Find(id);
+            if (vIP != null)
+            {
+                return true;
+            }
+            return false;
+        }
+        [HttpPost]
+        public JsonResult Create01(string para01, string para02, string para03, string para04, string para05, string para06)
+        {
+            string VIP_ID = para01;
+            string VIP_NAME = para02;
+            string SEX = para03;
+            string PHONE_NUMBER = para04;
+            short CREDITS;
+            string EMPLOYEE_ID = para06;
+
+
+            short.TryParse(para05, out CREDITS);
+            VIP newVIP = new VIP();
+
+            newVIP.VIP_ID = VIP_ID;
+            newVIP.VIP_NAME = VIP_NAME;
+            newVIP.SEX = SEX;
+            newVIP.PHONE_NUMBER = PHONE_NUMBER;
+            newVIP.CREDITS = CREDITS;
+            newVIP.EMPLOYEE_ID = EMPLOYEE_ID;
+
+            //缺少误填判断
+            db.VIP.Add(newVIP);
+            db.SaveChanges();
+
+            var list = db.VIP.Select(n => new { VIP_ID = n.VIP_ID, VIP_NAME = n.VIP_NAME, SEX = n.SEX, PHONE_NUMBER = n.PHONE_NUMBER, CREDITS = n.CREDITS, EMPLOYEE_ID = n.EMPLOYEE_ID }).ToList();
             return Json(new { code = 0, msg = "", count = 1000, data = list }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public void Delete(string id)
+        {
+            if (id == null)
+            {
+                return;
+            }
+            VIP vIP = db.VIP.Find(id);
+            if (vIP == null)
+            {
+                return;
+            }
+
+            db.VIP.Remove(vIP);
+            db.SaveChanges();
+
         }
     }
 }
