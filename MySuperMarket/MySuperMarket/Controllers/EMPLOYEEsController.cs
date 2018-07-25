@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -141,6 +141,42 @@ namespace MySuperMarket.Controllers
             return Json(new { code = 0, msg = "", count = 1000, data = list2 });
         }
 
+        public string accountAllPeople()
+        {
+            var accountAll = db.EMPLOYEE.Count();
+
+            return accountAll.ToString();
+        }
+
+        public string accountMalePeople()
+        {
+            var list = db.EMPLOYEE.Where(n => n.SEX == "男").Select(n => new { EMPLOYEE_ID = n.EMPLOYEE_ID, EMPLOYEE_NAME = n.EMPLOYEE_NAME, SEX = n.SEX, PHONE_NUMBER = n.PHONE_NUMBER, SALARY = n.SALARY });
+            var accountMale = list.Count();
+            return accountMale.ToString();
+        }
+
+        public string accountFemalePeople()
+        {
+            var list = db.EMPLOYEE.Where(n => n.SEX == "女").Select(n => new { EMPLOYEE_ID = n.EMPLOYEE_ID, EMPLOYEE_NAME = n.EMPLOYEE_NAME, SEX = n.SEX, PHONE_NUMBER = n.PHONE_NUMBER, SALARY = n.SALARY });
+            var accountFemale = list.Count();
+            return accountFemale.ToString();
+        }
+        public string accountAllSalary()
+        {
+            var allSalary = db.EMPLOYEE.Sum(n => n.SALARY);
+            return allSalary.ToString();
+        }
+
+        [HttpPost]
+        public bool test(string id)
+        {
+            EMPLOYEE eMPLOYEE = db.EMPLOYEE.Find(id);
+            if (eMPLOYEE != null)
+            {
+                return true;
+            }
+            return false;
+        }
 
         [HttpPost]
         public JsonResult Create(string para01, string para02, string para03, string para04, string para05)
@@ -161,17 +197,15 @@ namespace MySuperMarket.Controllers
             newEmployee.SEX = sex;
             newEmployee.PHONE_NUMBER = phone;
 
-            if (ModelState.IsValid)
+            EMPLOYEE eMPLOYEE = db.EMPLOYEE.Find(id);
+            if (eMPLOYEE == null)
             {
                 db.EMPLOYEE.Add(newEmployee);
                 db.SaveChanges();
-                var list = db.EMPLOYEE.Select(n => new { EMPLOYEE_ID = n.EMPLOYEE_ID, EMPLOYEE_NAME = n.EMPLOYEE_NAME, SEX = n.SEX, PHONE_NUMBER = n.PHONE_NUMBER, SALARY = n.SALARY });
-                return Json(new { code = 0, msg = "", count = 1000, data = list }, JsonRequestBehavior.AllowGet);
-
             }
 
-            var list2 = db.EMPLOYEE.Select(n => new { EMPLOYEE_ID = n.EMPLOYEE_ID, EMPLOYEE_NAME = n.EMPLOYEE_NAME, SEX = n.SEX, PHONE_NUMBER = n.PHONE_NUMBER, SALARY = n.SALARY });
-            return Json(new { code = 0, msg = "", count = 1000, data = list2 }, JsonRequestBehavior.AllowGet);
+            var list = db.EMPLOYEE.Select(n => new { EMPLOYEE_ID = n.EMPLOYEE_ID, EMPLOYEE_NAME = n.EMPLOYEE_NAME, SEX = n.SEX, PHONE_NUMBER = n.PHONE_NUMBER, SALARY = n.SALARY });
+            return Json(new { code = 0, msg = "", count = 1000, data = list }, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -193,37 +227,31 @@ namespace MySuperMarket.Controllers
             }
             */
             EMPLOYEE eMPLOYEE = db.EMPLOYEE.Find(id);
+            /*
             if (eMPLOYEE == null)
             {
                 //return Json(null);
             }
-            if (ModelState.IsValid)
+            */
+            eMPLOYEE.EMPLOYEE_NAME = name;
+            eMPLOYEE.SALARY = intSalary;
+            eMPLOYEE.SEX = sex;
+            eMPLOYEE.PHONE_NUMBER = phone;
+
+            db.Entry(eMPLOYEE).State = EntityState.Modified;
+
+            try
             {
-                eMPLOYEE.EMPLOYEE_NAME = name;
-                eMPLOYEE.SALARY = intSalary;
-                eMPLOYEE.SEX = sex;
-                eMPLOYEE.PHONE_NUMBER = phone;
-
-                db.Entry(eMPLOYEE).State = EntityState.Modified;
-
-                try
-                {
-
-                    db.SaveChanges();
-                }
-                catch (Exception ex)
-                {
-                    throw;
-                }
-
-
-                var list = db.EMPLOYEE.Select(n => new { EMPLOYEE_ID = n.EMPLOYEE_ID, EMPLOYEE_NAME = n.EMPLOYEE_NAME, SEX = n.SEX, PHONE_NUMBER = n.PHONE_NUMBER, SALARY = n.SALARY });
-                return Json(new { code = 0, msg = "", count = 1000, data = list }, JsonRequestBehavior.AllowGet);
-
+                db.SaveChanges();
             }
-            var list2 = db.EMPLOYEE.Select(n => new { EMPLOYEE_ID = n.EMPLOYEE_ID, EMPLOYEE_NAME = n.EMPLOYEE_NAME, SEX = n.SEX, PHONE_NUMBER = n.PHONE_NUMBER, SALARY = n.SALARY });
-            return Json(new { code = 0, msg = "", count = 1000, data = list2 }, JsonRequestBehavior.AllowGet);
+            catch (Exception ex)
+            {
+                throw;
+            }
 
+
+            var list = db.EMPLOYEE.Select(n => new { EMPLOYEE_ID = n.EMPLOYEE_ID, EMPLOYEE_NAME = n.EMPLOYEE_NAME, SEX = n.SEX, PHONE_NUMBER = n.PHONE_NUMBER, SALARY = n.SALARY });
+            return Json(new { code = 0, msg = "", count = 1000, data = list }, JsonRequestBehavior.AllowGet); eMPLOYEE.PHONE_NUMBER = phone;
         }
         [HttpPost]
         public void Delete(string id)
@@ -242,14 +270,7 @@ namespace MySuperMarket.Controllers
             db.SaveChanges();
 
         }
-
-        /*protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }*/
     }
 }
+
+
