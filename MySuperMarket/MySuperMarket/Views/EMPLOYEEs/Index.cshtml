@@ -49,52 +49,52 @@
                     <li class="layui-nav-item">
                         <a class="" href="javascript:;">销售管理</a>
                         <dl class="layui-nav-child">
-                            <dd><a href="01_today_sale.html">今日销售</a></dd>
-                            <dd><a href="02_sale_record.html">销售报表</a></dd>
-                            <dd><a href="03_info_manage.html">商品信息管理</a></dd>
-                            <dd><a href="04_income_expenses_manage.html">收支管理</a></dd>
+                            <dd><a href="/SALES_LOT/Index">今日销售</a></dd>
+                            <dd><a href="/SALES_LOT/Create">销售报表</a></dd>
+                            <dd><a href="/PRODUCT_ATTRIBUTE/Index">商品信息管理</a></dd>
+                            <dd><a href="/INCOMEs/Index">收支管理</a></dd>
                         </dl>
                     </li>
                     <li class="layui-nav-item">
                         <a href="javascript:;">货架管理</a>
                         <dl class="layui-nav-child">
-                            <dd><a href="05_shelves_partiton.html">货架分区</a></dd>
-                            <dd><a href="05.1_product_display.html">商品摆放</a></dd>
+                            <dd><a href="/SHELves/Index">货架分区</a></dd>
+                            <dd><a href="/PRODUCTs/Put">商品摆放</a></dd>
                         </dl>
                     </li>
                     <li class="layui-nav-item">
                         <a class="" href="javascript:;">库存管理</a>
                         <dl class="layui-nav-child">
-                            <dd><a href="06_stock_record.html">进货记录</a></dd>
-                            <dd><a href="07_inventory_check.html">库存核查</a></dd>
+                            <dd><a href="/STOCKs/Index">进货记录</a></dd>
+                            <dd><a href="/PRODUCTs/Index">库存记录</a></dd>
                         </dl>
                     </li>
                     <li class="layui-nav-item">
                         <a class="" href="javascript:;">供应链管理</a>
                         <dl class="layui-nav-child">
-                            <dd><a href="08_supply_record.html">进货计划</a></dd>
-                            <dd><a href="09_supplier_info.html">供货商信息</a></dd>
+                            <dd><a href="/PLANs/Index">进货计划</a></dd>
+                            <dd><a href="/SUPPLIERs/Index">供货商信息</a></dd>
                         </dl>
                     </li>
                     <li class="layui-nav-item">
                         <a class="" href="javascript:;">赞助商管理</a>
                         <dl class="layui-nav-child">
-                            <dd><a href="10_sponsor_record.html">赞助记录</a></dd>
-                            <dd><a href="11_sponsor_info.html">赞助商信息</a></dd>
-                        </dl>
-                    </li>
-                    <li class="layui-nav-item layui-nav-itemed">
-                        <a class="" href="javascript:;">员工管理</a>
-                        <dl class="layui-nav-child">
-                            <dd class="layui-this"><a href="12_employee_record.html">员工记录</a></dd>
-                            <dd><a href="13_salary_manage.html">工资管理</a></dd>
+                            <dd><a href="/SUPPORTs/Index">赞助记录</a></dd>
+                            <dd><a href="/SPONSORs/Index">赞助商信息</a></dd>
                         </dl>
                     </li>
                     <li class="layui-nav-item">
+                        <a class="" href="javascript:;">员工管理</a>
+                        <dl class="layui-nav-child">
+                            <dd class="layui-this"><a href="/EMPLOYEEs/Index">员工记录</a></dd>
+                            <dd><a href="/SALARies/Index">工资管理</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item layui-nav-itemed">
                         <a class="" href="javascript:;">促销管理</a>
                         <dl class="layui-nav-child">
-                            <dd><a href="14_vip_info.html">会员信息</a></dd>
-                            <dd><a href="15_discount_manage.html">折扣管理</a></dd>
+                            <dd><a href="/VIPs/Index">会员信息</a></dd>
+                            <dd><a href="/PRODUCTs/Create">折扣管理</a></dd>
                         </dl>
                     </li>
                 </ul>
@@ -162,7 +162,7 @@
                                 <div class="layui-inline">
                                     <label class="layui-form-label">键值类型</label>
                                     <div class="layui-input-inline">
-                                        <select name="type" lay-filter="aihao">
+                                        <select id="search-select" lay-filter="aihao">
                                             <option value="">-请选择-</option>
                                             <option value="0">ID</option>
                                             <option value="1">姓名</option>
@@ -175,7 +175,7 @@
                                 <div class="layui-inline">
                                     <label class="layui-form-label">输入键值</label>
                                     <div class="layui-input-inline">
-                                        <input name="title" autocomplete="off" placeholder="请输入"
+                                        <input name="search-input" autocomplete="off" placeholder="请输入"
                                                class="layui-input" type="text">
                                     </div>
                                 </div>
@@ -256,11 +256,11 @@
                 <div class="layui-form-item">
                     <div class="layui-input-block">
                         <button class="layui-btn layui-btn-primary close"
-                                onclick="layer.closeAll()">
+                                onclick="layer.closeAll()" type="button">
                             取消
                         </button>
-                        <button class="layui-btn layui-btn-normal"type="button"
-                                lay-filter="bt002" lay-submit>
+                        <button class="layui-btn layui-btn-normal"
+                                lay-filter="bt002" lay-submit type="button">
                             查询
                         </button>
                     </div>
@@ -423,6 +423,24 @@
                 "PHONE_NUMBER": "86"
             }]
         });
+        // 搜索点击按钮
+        $(document).on('click', '#employee-search', function () {
+            alert($("#search-select").val() + '/' + $("input[name='search-input']").val());
+            table.render({
+                elem: '#employee_info_table'
+                    , url: '/EMPLOYEEs/search01/' + $("#search-select").val() + '/' + $("input[name='search-input']").val() //数据接口
+                    , method: "post"
+                    , cellMinWidth: 150
+                    , cols: [[
+                        { field: 'EMPLOYEE_ID', title: '员工编号', sort: true }
+                        , { field: 'EMPLOYEE_NAME', title: '员工姓名', sort: true }
+                        , { field: 'SALARY', title: '工资', sort: true }
+                        , { field: 'SEX', title: '性别', sort: true }
+                        , { field: 'PHONE_NUMBER', title: '电话号', sort: true }
+                        , { align: 'center', toolbar: '#staff-table-bar', title: '操作' }
+                    ]]
+            });
+        });
         // 高级搜索按钮点击事件
         $(document).on('click', '#employee-Hsearch', function () {
             layer.open({
@@ -467,7 +485,7 @@
         });
     });
     </script>
-    <!-- 搜索点击事件 -->
+    <!-- 搜索点击事件
     <script type="text/javascript">
     $(document).ready(function () {
         $("#employee-search").click(function () {
@@ -475,6 +493,7 @@
                 var table = layui.table;
                 var element = layui.element;
                 var $ = layui.jquery;
+                alert("/EMPLOYEEs/search01/' + $('#type').val() + '/' + $('input[name='title']').val()");
                 table.render({
                     elem: '#employee_info_table'
                     , url: '/EMPLOYEEs/search01/' + $("#type").val() + '/' + $("input[name='title']").val() //数据接口
@@ -499,7 +518,7 @@
             });
         });
     });
-    </script>
+    </script>-->
     <!-- 按钮监听事件 -->
     <script>
     layui.use(['form', 'layer'], function () {
@@ -622,6 +641,7 @@
                     ]]
                 });
             });
+            layer.closeAll();
         });
 
     });
